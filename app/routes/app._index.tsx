@@ -134,6 +134,13 @@ export default function Index() {
                     </Button>
                   </InlineStack>
                 </fetcher.Form>
+                <Text as="p" variant="bodySm" tone="subdued">
+                  Metal prices provided by{" "}
+                  <a href="https://metalpriceapi.com" target="_blank" rel="noopener noreferrer">
+                    metalpriceapi.com
+                  </a>
+                  .
+                </Text>
                 {data?.ok === true && !dismissBanner && (
                   <Banner
                     title="Prices updated"
