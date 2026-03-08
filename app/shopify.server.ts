@@ -10,7 +10,7 @@ import { randomBytes } from "node:crypto";
 import prisma from "./db.server";
 
 /** Plan key for Shopify billing config; €9.99/mo recurring. */
-export const PREMIUM_PLAN = "Premium Plan";
+export const PREMIUM_PLAN = "premium-plan";
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
