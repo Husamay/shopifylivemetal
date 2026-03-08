@@ -1,0 +1,44 @@
+---
+description: How to fill and maintain .env.prod.example (image overrides and secrets)
+globs: .env.prod.example, .env.prod
+alwaysApply: false
+---
+
+# .env.prod.example — fill and keep in sync
+
+Use this when editing `.env.prod.example` or when adding a new project so the example stays complete.
+
+## Structure
+
+1. **Header** – Copy instruction and note about registry; reference README for adding projects.
+2. **One section per project** – Order matches `config.md` / compose layout: Main, Tiktoksearch, Newswebsite, Websitehelper.
+3. **App secrets** – Final section for `OPENAI_API_KEY` and other backend secrets (DB URLs, API keys).
+
+## Env var naming (required)
+
+- **Pattern:** `<PROJECT>_BACKEND_IMAGE`, `<PROJECT>_FRONTEND_IMAGE`, and for extra backends `<PROJECT>_BACKEND_<ROLE>_IMAGE`.
+- **Project:** Directory name in UPPERCASE with hyphens replaced by underscores (e.g. `tiktoksearch` → `TIKTOKSEARCH`, `newswebsite` → `NEWSWEBSITE`).
+- **Values:** Registry image with tag, e.g. `ghcr.io/yourorg/<service-name>:latest`. Service name = compose service name (e.g. `tiktoksearch-backend`, `tiktoksearch-backend-urlresolver`).
+
+## Per-project section format
+
+```bash
+# --- Project Label (optional host note) ---
+# PROJECT_BACKEND_IMAGE=ghcr.io/yourorg/project-backend:latest
+# PROJECT_FRONTEND_IMAGE=ghcr.io/yourorg/project-frontend:latest
+# (If extra backends:) # PROJECT_BACKEND_<ROLE>_IMAGE=ghcr.io/yourorg/project-backend-<role>:latest
+```
+
+- Section title: `# --- Project Label ---` (e.g. `# --- Newswebsite ---`).
+- All vars in the section are **commented** so the file stays a template; users uncomment and set in `.env.prod`.
+
+## When adding a new project
+
+1. Add a section **above** "App secrets".
+2. Env names must match the `image: ${VAR:-default}` in that project's `docker-compose.yml` (see existing projects).
+3. Include both `PROJECT_BACKEND_IMAGE` and `PROJECT_FRONTEND_IMAGE`; add `PROJECT_BACKEND_<ROLE>_IMAGE` for each extra backend (urlresolver, extractor, affiliate, etc.).
+4. Update the README "How to add more projects" step that mentions `.env.prod.example` if the example format changes.
+
+## Single source of truth
+
+Image variable names in `.env.prod.example` must match the compose files. Check `<project>/docker-compose.yml` for each `image: ${...}` and ensure a corresponding commented line exists in the example.

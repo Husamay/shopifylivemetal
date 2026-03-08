@@ -1,0 +1,7 @@
+# Example Caddyfile for Live Metal Shopify app
+# Domain: shopifylivemetal.flameforge.work
+# Use: copy to Caddyfile and run caddy (or use with caddy run / caddy start)
+
+shopifylivemetal.flameforge.work {
+    reverse_proxy localhost:3000
+}

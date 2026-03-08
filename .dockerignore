@@ -1,0 +1,14 @@
+node_modules
+.git
+.env
+.env.*
+!.env.example
+build
+dist
+*.log
+npm-debug*
+.DS_Store
+coverage
+.cache
+*.sqlite
+*.sqlite-journal

@@ -1,0 +1,24 @@
+---
+description: Spring Boot and Java backend standards (apply only when project uses Spring Boot)
+globs: ["backend/**/*.java", "src/main/java/**/*.java"]
+alwaysApply: false
+---
+# Spring Boot Standards
+
+**Scope:** Apply these rules only when the project has chosen Spring Boot/Java for the backend.
+
+- **Stack:** Spring Boot backend in Java. Java is the required language; no Kotlin or Groovy.
+- **Project layout:** Backend code lives under a dedicated `backend/` directory with its own `pom.xml`. The repository root contains a super `pom.xml` that manages `backend` (and the `frontend` module) as Maven modules. See `/project/.cursor/rules/project-structure.mdc` for details.
+- **Docker & deployment:** A `Dockerfile` for the backend must exist in `backend/` and participate in the shared Docker/Kubernetes/CI strategy described in `/project/.cursor/rules/docker.mdc`, `/project/.cursor/rules/k8s.mdc`, and `/project/.cursor/rules/ci-github.mdc`.
+- **Local tooling:** Use the root-level `local/` directory for local-only configs, compose files, and scripts as described in `/project/.cursor/rules/local-env.mdc`.
+- **Architecture:** Follow Hexagonal pattern with CQRS pattern. Separate domain, application, and infrastructure layers.
+- **Dependency Injection:** Use constructor injection with `@RequiredArgsConstructor` (Lombok). Avoid field injection.
+- **REST:** Use `@RestController` and `@RequestMapping("/api/v1/...")`. Use proper HTTP verbs (`@GetMapping`, `@PostMapping`, etc.). Return `ResponseEntity<T>` for explicit status codes.
+- **Data:** Use DTOs for requests/responses; never expose `@Entity` directly to the API. Use MapStruct or manual mapping for conversions.
+- **Database:** Use Spring Data JPA. Prefer `Optional<T>` for finders. Use `@Transactional` on service methods, not repositories.
+- **Validation:** Use `@Valid` and Bean Validation annotations (`@NotNull`, `@Size`, `@Email`, etc.). Validate at controller level.
+- **Exception Handling:** Use `@ControllerAdvice` for global exception handling. Create custom exceptions extending `RuntimeException`. Return consistent error response DTOs.
+- **Logging:** Use SLF4J with Logback. Use appropriate log levels (`DEBUG`, `INFO`, `WARN`, `ERROR`). Log exceptions with context.
+- **WebSocket:** Use `@MessageMapping` and `@SendTo` for WebSocket endpoints. Handle connection lifecycle events.
+- **Testing:** Write unit tests with JUnit 5 and Mockito. Use `@SpringBootTest` for integration tests. Test controllers with `MockMvc`.
+- **Style:** PascalCase for classes, camelCase for methods. Use Java 17+ features (Records, pattern matching, text blocks). Keep methods under 20 lines when possible.

@@ -1,0 +1,23 @@
+---
+description: Vue.js frontend standards (apply only when project uses Vue)
+globs: ["frontend/**/*.{vue,ts}", "src/main/resources/static/**/*.{vue,ts}"]
+alwaysApply: false
+---
+# Vue.js Standards
+
+**Scope:** Apply these rules only when the project has chosen Vue.js for the frontend.
+
+- **Stack:** Vue.js frontend in TypeScript. TypeScript is required; no plain JavaScript for new code. Use `.ts` for scripts and composables.
+- **Project layout:** Frontend code lives under a dedicated `frontend/` directory with its own `pom.xml` (for build orchestration) and JavaScript tooling. The repository root contains a super `pom.xml` that manages `frontend` (and the `backend` module) as Maven modules. See `/project/.cursor/rules/project-structure.mdc` for details.
+- **Docker & deployment:** A `Dockerfile` for the frontend must exist in `frontend/` and participate in the shared Docker/Kubernetes/CI strategy described in `/project/.cursor/rules/docker.mdc`, `/project/.cursor/rules/k8s.mdc`, and `/project/.cursor/rules/ci-github.mdc`.
+- **Local tooling:** Use the root-level `local/` directory for local-only configs, compose files, and scripts as described in `/project/.cursor/rules/local-env.mdc`.
+- **API:** Use `<script setup>` with Composition API.
+- **TypeScript (required):** Use strict typing. Avoid `any`. Define props with `defineProps<{}>()` and emits with `defineEmits<{}>()`. Use `.ts` (not `.js`) for composables and utilities.
+- **State:** Use Pinia for global state; `ref`/`reactive` for local state. Prefer `ref` over `reactive` for primitives.
+- **Styling:** Use Tailwind CSS. Favor utility classes over scoped CSS blocks. Use `@apply` sparingly.
+- **Components:** Use PascalCase for filenames (e.g., `UserCard.vue`). Keep components focused and composable.
+- **Icons:** Use `lucide-vue-next` or `@heroicons/vue` as the default icon library.
+- **Composables:** Extract reusable logic into composables in `composables/` directory. Use `use` prefix (e.g., `useWebSocket.ts`).
+- **Error Handling:** Use try-catch in async operations. Display user-friendly error messages. Log errors to console in development.
+- **API Integration:** Use composables for API calls. Handle loading and error states explicitly.
+- **WebSocket:** Use composables for WebSocket connections. Implement reconnection logic and handle connection states.

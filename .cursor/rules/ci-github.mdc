@@ -1,0 +1,28 @@
+---
+description: GitHub CI/CD standards for the project
+globs: .github/workflows/**/*
+alwaysApply: false
+---
+
+# GitHub CI/CD Standards
+
+Apply when the project uses GitHub for CI/CD. Match workflows to the project's chosen stack and modules.
+
+- **Workflow location:**
+  - GitHub CI/CD configuration must reside under `.github/workflows/` in the repository root.
+  - At minimum, define a primary workflow file (e.g., `.github/workflows/ci.yml`).
+
+- **Core responsibilities:**
+  - On each push and pull request:
+    - Build the project (e.g., Maven super project or Node build) and its modules—`backend`, `frontend`, or others as applicable.
+    - Run unit and integration tests for the relevant modules.
+  - On main branch merges or tagged releases:
+    - When Docker is used: build images for backend and/or frontend using their Dockerfiles.
+    - Push images to the configured container registry.
+    - When Kubernetes is used: optionally apply or trigger deploys using manifests in `k8s/`.
+
+- **Best practices:**
+  - Use reusable jobs or composite actions where possible to avoid duplication.
+  - Cache Maven and Node/Yarn/NPM dependencies to speed up builds.
+  - Fail fast on lint/test failures and require CI to pass before merging to protected branches.
+  - Keep secrets in GitHub Actions secrets, not in the workflow files.

@@ -1,0 +1,22 @@
+# Live Metal stack (deploy naming: shopify-live-metal-backend, port 8080).
+# Set .env with SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SCOPES, SHOPIFY_APP_URL.
+# Override image via SHOPIFY_LIVE_METAL_BACKEND_IMAGE (e.g. in .env.prod).
+
+services:
+  shopify-live-metal-backend:
+    image: ${SHOPIFY_LIVE_METAL_BACKEND_IMAGE:-ghcr.io/husamay/shopify-live-metal/backend:latest}
+    build: .
+    container_name: shopify-live-metal-backend
+    ports:
+      - "3000:8080"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "file:/app/data/dev.sqlite"
+      # DEBUG_METAL_PRICES: "1"   # optional: log per-product metafields and skip/update reasons (or set in .env)
+    volumes:
+      - live-metal-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  live-metal-data:

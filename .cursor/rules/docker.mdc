@@ -1,0 +1,30 @@
+---
+description: Docker standards for frontend and backend
+globs: **/Dockerfile*, **/docker-compose*.yml, **/.dockerignore
+alwaysApply: false
+---
+
+# Docker Standards
+
+Apply when the project uses Docker for deployment. Stack-specific details below apply only if the project uses those stacks.
+
+- **Dockerfiles:**
+  - A `Dockerfile` must exist in `backend/` (when present) to build and run the backend service. If using Spring Boot, expect a typical JAR-based runtime; if using other stacks, adjust accordingly.
+  - A `Dockerfile` must exist in `frontend/` (when present) to build and serve the frontend app. If using Vue/SPA tooling, expect a typical static build; if using other stacks, adjust accordingly.
+  - Dockerfiles should:
+    - Use multi-stage builds where appropriate (builder + runtime).
+    - Expose only the required ports (e.g., `8080` for backend, `80`/`4173` for frontend).
+    - Use minimal base images suitable for production (e.g., distroless, alpine, or slim images).
+
+- **Image naming conventions:**
+  - Backend image: `{{org}}/{{project}}-backend:{{tag}}`
+  - Frontend image: `{{org}}/{{project}}-frontend:{{tag}}`
+  - Tags should be immutable (e.g., commit SHA or version number).
+
+- **Build integration:**
+  - Prefer Maven or CI workflows to build Docker images consistently for both `backend` and `frontend`.
+  - Do not rely on manual `docker build` commands as the primary deployment path; codify builds in CI (see `ci-github.mdc`).
+
+- **Security & configuration:**
+  - Do not bake secrets into images; use environment variables or external secret stores.
+  - Externalize configuration via env vars or mounted config files so the same image can be used for multiple environments.

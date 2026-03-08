@@ -1,0 +1,19 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "43d14c859c222beadfd989df9564dace"
+name = "live metal price update"
+application_url = "https://4589-2a02-a44e-ea06-0-84e1-90a1-5e88-e96d.ngrok-free.app"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2026-04"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products,write_products"
+
+[auth]
+redirect_urls = [ "https://4589-2a02-a44e-ea06-0-84e1-90a1-5e88-e96d.ngrok-free.app/api/auth" ]

@@ -1,0 +1,14 @@
+---
+description: Index for deploy frontend/backend and port conventions — see the deploy-* rule files below
+globs: **/*.yml, **/Caddyfile, **/config.md, **/README.md, **/up.sh, **/up.ps1, **/.env.prod.example
+alwaysApply: false
+---
+
+# Deploy project: frontend/backend and port conventions
+
+Use the following rules when editing the deploy repo or when adding or designing apps that will be added to it:
+
+- **deploy-service-naming.mdc** — Service naming (`<project>-backend`, `<project>-frontend`, etc.) and port convention (8080 / 80).
+- **deploy-ghcr-images.mdc** — GHCR image naming and `.env.prod` image variables.
+- **deploy-add-new-project.mdc** — Step-by-step checklist for adding a new project (compose, Caddyfile, scripts, config).
+- **deploy-app-integration.mdc** — Requirements for app projects that will join deploy (ports, image names).

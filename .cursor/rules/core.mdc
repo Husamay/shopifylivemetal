@@ -1,0 +1,17 @@
+---
+description: Global project behavior
+globs: "**/*"
+alwaysApply: true
+---
+
+# Global Rules
+
+- **Tone:** Be concise. Provide code first, then brief explanations. Focus on actionable solutions.
+- **Errors:** If you see a potential bug or security flaw (like CSRF, SQLi, XSS, or injection attacks), warn immediately with specific remediation steps.
+- **Refactoring:** Before a major change, summarize the plan in 2-3 bullets. Explain the "why" behind the change.
+- **Naming:** Files should be lowercase with dashes (except Vue components which use PascalCase). Use descriptive, self-documenting names.
+- **Security:** Never hardcode secrets, API keys, or passwords. Use environment variables or Spring profiles. Validate and sanitize all user inputs.
+- **Documentation:** Add Javadoc for public APIs. Add inline comments for complex business logic. Keep README updated with setup changes.
+- **Dependencies:** Prefer well-maintained libraries. Check for security vulnerabilities. Keep dependencies up to date.
+- **Git:** Write clear, descriptive commit messages. Use conventional commits format when possible (feat:, fix:, refactor:, etc.).
+- **Context:** When the user references files or folders, read only the specific files needed. Avoid reading entire directories unless explicitly requested.

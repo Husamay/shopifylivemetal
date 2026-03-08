@@ -1,0 +1,30 @@
+# Live Metal – update product prices from Metal Price API (EUR)
+
+name = "Live Metal"
+client_id = "REPLACE_AFTER_LINKING"
+application_url = "https://REPLACE_AFTER_DEPLOY"
+embedded = true
+
+[access_scopes]
+scopes = "read_products,write_products"
+
+[auth]
+redirect_urls = [
+  "https://REPLACE_AFTER_DEPLOY/auth/callback",
+  "https://REPLACE_AFTER_DEPLOY/auth/shopify/callback",
+  "https://REPLACE_AFTER_DEPLOY/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "/webhooks/app/uninstalled"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "REPLACE_WITH_DEV_STORE.myshopify.com"

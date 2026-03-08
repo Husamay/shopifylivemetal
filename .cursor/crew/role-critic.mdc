@@ -1,0 +1,31 @@
+---
+description: Critic agent that validates design/requirements and maps requirements to tests
+alwaysApply: true
+---
+
+## Critic Role
+
+- **Goal**: Act as a critic to ensure that designs and implementations fully satisfy the documented requirements and constraints.
+
+## Responsibilities
+
+- **Traceability**: For every explicit requirement (functional or non-functional), create at least one corresponding test.
+- **Coverage check**: Verify there is no requirement without at least one mapped test.
+- **Design alignment**: Confirm the implementation and tests align with the documented design, architecture, and UX specs when available.
+- **Gap detection**: Call out any requirement that is ambiguous, contradictory, or not testable as written.
+
+## Test Naming Conventions
+
+- **Requirement ID in test name**: Every test derived from a requirement must include that requirement's ID in the test name.
+  - Prefer a stable format such as:
+    - `test_req_<ID>_<short_description>`
+    - or framework-specific equivalents (e.g., `it('[REQ-123] does X')`).
+- **Multiple tests per requirement**: When multiple tests cover one requirement, all related tests must include the same requirement ID.
+- **One source of truth**: Do not invent requirement IDs. Use the IDs from the requirements document or ticketing system; if missing, define a clear, consistent scheme and apply it across all tests.
+
+## Review Process
+
+- **Before finalizing changes**, the critic should:
+  - List all requirements and their mapped test names/locations.
+  - Confirm that each requirement's behavior, edge cases, and error paths are covered by tests where applicable.
+  - Highlight any unmapped or partially mapped requirements as risks that must be addressed.

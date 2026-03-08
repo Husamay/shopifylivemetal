@@ -1,0 +1,76 @@
+---
+description: Single planning-mode workflow coordinating Architect, Critic, and Developer roles
+alwaysApply: false
+---
+
+## Usage
+
+- **Scope**: This workflow is **only used in Planning mode**.
+- **Entry**: Invoke it as `@.cursor/workflow.mdc` (no sub-commands).
+- **Goal**: Produce a complete, machine-readable plan (requirements, design, work breakdown) that has been **created by the Architect**, **critically reviewed**, **refined**, and is ready for **Developer execution**.
+
+The workflow is structured into four phases:
+
+1. **Plan (Architect)**
+2. **Create (one-time, Architect using `.cursor/rules/` standards)**
+3. **Critic Check (Critic)**
+4. **Refine & Start Handoff (Architect → Developer)**
+
+All actual coding/implementation happens later in Agent mode via the Developer role; this document only governs the planning workflow.
+
+## 1. Plan (Architect)
+
+- Invoke `@.cursor/crew/role-architect.mdc`.
+- Gather requirements from the user until each is:
+  - Unambiguous
+  - Testable (with clear acceptance criteria)
+  - Scoped (what is in/out of scope)
+- Record requirements in `/project/Requirements.yaml` as the single source of truth:
+  - Include `machine_readable: true` and `schema_version`.
+  - Assign IDs `R-0001`, `R-0002`, ... (incrementing).
+- Based strictly on `/project/Requirements.yaml`, produce `/project/Design.yaml`:
+  - Capture scope, components, responsibilities, data flow, interfaces/contracts, constraints, and non-goals.
+  - Maintain traceability from design elements back to requirement IDs.
+- Maintain `/project/Decision.log` for human-readable architecture decisions:
+  - Each entry has timestamp, decision ID `D-0001+`, impact rating, decision, rationale, and alternatives.
+- Generate `/project/WorkBreakdown.yaml` from the design and requirements:
+  - Tasks `T-0001+` with goal, files to touch (paths under `/project`), done criteria, and dependencies (`T-####` or `D-####`).
+  - Ensure tasks are small, explicit, and verifiable.
+
+## 2. Create (one-time, Architect using `.cursor/rules/`)
+
+- Still in Planning mode, the Architect performs a **non-repeatable, one-time project creation step** using the standards in `.cursor/rules/`:
+  - `project-structure.mdc`
+  - `docker.mdc`
+  - `local-env.mdc`
+  - `ci-github.mdc`
+- Responsibilities:
+  - Align the planned repository layout (`backend/`, `frontend/`, `local/`, `k8s/`, `.github/workflows/`, etc.) with `project-structure.mdc`.
+  - Plan how Docker, Kubernetes, local tooling, and CI/CD will be structured according to the respective rule files.
+  - If a new project is being created, define the initial structure and configuration changes as **explicit tasks** in `/project/WorkBreakdown.yaml` (to be executed later by the Developer in Agent mode).
+- This phase must be treated as **one-time**: once the initial creation plan is agreed, subsequent Planning runs only refine/extend it, not recreate it from scratch.
+
+## 3. Critic Check (Critic)
+
+- Invoke `@.cursor/crew/role-critic.mdc` to review the plan:
+  - Ensure every requirement in `/project/Requirements.yaml` has at least one mapped test concept and corresponding task(s) in `/project/WorkBreakdown.yaml`.
+  - Verify that requirements, design, and work breakdown are aligned and consistent.
+  - Call out:
+    - Ambiguous or non-testable requirements.
+    - Missing or conflicting design decisions.
+    - Gaps in the work breakdown (e.g., missing tasks for critical behavior, deployment, or observability).
+- The Critic produces a concise list of **findings and recommended changes**, referencing requirement (`R-####`), design, decision (`D-####`), and task (`T-####`) IDs.
+
+## 4. Refine & Start Handoff (Architect → Developer)
+
+- Invoke the Architect again to refine the plan based on the Critic's findings:
+  - Update `/project/Requirements.yaml`, `/project/Design.yaml`, `/project/Decision.log`, and `/project/WorkBreakdown.yaml` as needed.
+  - Ensure traceability remains intact (IDs preserved or explicitly superseded).
+- When the plan is stable:
+  - Mark clearly in the conversation that **Planning is complete** and the workflow is ready for implementation.
+  - Describe how Developer work should proceed:
+    - The Developer (via `@.cursor/crew/role-developer.mdc`) will:
+      - Perform the mandatory preflight by reading `/project/Design.yaml` and `/project/WorkBreakdown.yaml`.
+      - Select tasks (`T-####`) and output a Preflight Summary (task IDs, relevant design components/contracts, files to touch, and minimal test plan).
+      - Implement code strictly according to the plan and done-criteria.
+- After this handoff, **all coding is performed by the Developer role** in Agent mode. This workflow is not used for implementation; it only defines the planning and handoff process.

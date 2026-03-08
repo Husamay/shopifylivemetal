@@ -1,0 +1,33 @@
+---
+description: GHCR image naming and env vars for deploy (PROJECT_BACKEND_IMAGE, PROJECT_FRONTEND_IMAGE)
+globs: **/*.yml, **/.env.prod.example
+alwaysApply: false
+---
+
+# Deploy: image naming (GHCR)
+
+Use when editing compose or `.env.prod` in the deploy repo. Pick one pattern per project and stick to it.
+
+## Preferred: package per project (one GHCR package per app)
+
+```
+ghcr.io/<org>/<project>/backend:latest
+ghcr.io/<org>/<project>/frontend:latest
+ghcr.io/<org>/<project>/backend-<role>:latest   # for extra backends
+```
+
+Example: `ghcr.io/husamay/tiktoksearch/backend:latest`, `ghcr.io/husamay/tiktoksearch/backend-urlresolver:latest`
+
+## Alternative: package per image (one GHCR package per service)
+
+```
+ghcr.io/<org>/<project>-backend:latest
+ghcr.io/<org>/<project>-frontend:latest
+```
+
+Example: `ghcr.io/husamay/newswebsite-backend:latest`, `ghcr.io/husamay/flameforge-frontend:latest`
+
+## Env vars and defaults
+
+- **In .env.prod:** `PROJECT_BACKEND_IMAGE`, `PROJECT_FRONTEND_IMAGE`, `PROJECT_BACKEND_<ROLE>_IMAGE` (UPPERCASE, underscores).
+- **Default in compose:** Match whatever the app's CI pushes. Override via `.env.prod` if the app uses different names.

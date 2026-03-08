@@ -1,0 +1,31 @@
+---
+description: Repository layout and module structure
+globs: pom.xml, package.json, **/pom.xml, config.md
+alwaysApply: false
+---
+
+# Project Structure Standards
+
+- **Root layout:**
+  - The main directory of the repository contains:
+    - A super `pom.xml` (or equivalent root build config) that defines modules such as `backend` and `frontend`, when the project adopts them.
+    - A `backend/` directory for backend sources, when the project has a backend module.
+    - A `frontend/` directory for frontend sources, when the project has a frontend module.
+    - A `local/` directory for local-only tooling (see `local-env.mdc`).
+    - A `.github/workflows/` directory for GitHub CI/CD, when used (see `ci-github.mdc`).
+
+- **Backend module (`backend/`), when present:**
+  - Contains its own build configuration managed by the root build.
+  - Contains all backend sources and resources.
+  - Stack-specific standards (e.g., Spring Boot/Java) apply only when the project chooses that stack; see `springboot.mdc` for Spring Boot options.
+  - Does not depend directly on `frontend/`.
+
+- **Frontend module (`frontend/`), when present:**
+  - Contains its own build configuration (e.g., `package.json`) managed or referenced by the root build.
+  - Contains all frontend sources, assets, and tooling.
+  - Stack-specific standards (e.g., Vue/TypeScript) apply only when the project chooses that stack; see `vue.mdc` for Vue options.
+  - Does not depend directly on `backend/`.
+
+- **Separation of concerns:**
+  - Cross-module integration happens only via HTTP/WebSocket APIs, not shared code.
+  - Shared build/deploy behavior is defined in the root build, Docker, and CI rules—when those are adopted—not by mixing source trees.

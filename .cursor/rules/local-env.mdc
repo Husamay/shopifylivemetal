@@ -1,0 +1,27 @@
+---
+description: Local development and tooling standards
+globs: local/**/*, .vscode/tasks.json, .env.local, .env.local.example
+alwaysApply: false
+---
+
+# Local Environment Standards
+
+- **`local/` directory purpose:**
+  - Exists at the repository root as `local/` when the project uses it.
+  - Contains files and scripts intended only for local development and testing (not deployed to production).
+
+- **Recommended contents (when applicable):**
+  - `local/docker-compose.local.yml` (or similar) to orchestrate backend, frontend, and supporting services (e.g., databases, message brokers), when the project has those components.
+  - `.env.local` / config templates for local runs, never containing committed secrets.
+  - Helper scripts for developers (e.g., `local/start-backend.sh`, `local/start-frontend.sh`, or platform-appropriate equivalents).
+
+- **`.vscode/tasks.json` (required):**
+  - Provide a `tasks.json` under `.vscode/` with at least two tasks:
+    1. **Build and deploy whole stack in Docker** – Build images and run the full stack via Docker (e.g., `docker compose up --build` or equivalent using the project's compose file).
+    2. **Run whole stack without Docker** – Run backend and frontend (and any supporting services) locally without Docker (e.g., Maven/Node dev servers, or scripts in `local/`).
+  - Use clear task labels so developers can run "Build and deploy whole stack in Docker" and "Run whole stack without Docker" from the VS Code task palette.
+
+- **Usage rules:**
+  - Local configuration must not diverge functionally from production paths; it should approximate real behavior with simplified infrastructure.
+  - Do not store production credentials or environment-specific secrets in `local/`.
+  - Prefer documenting local run commands (for both modules) in `README` and keeping implementation details here.

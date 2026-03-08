@@ -1,0 +1,25 @@
+---
+description: Service naming and port conventions for the deploy repo (backend/frontend/db, ports 8080/80)
+globs: **/*.yml, **/config.md
+alwaysApply: false
+---
+
+# Deploy: service naming and ports
+
+Use when editing compose files or config in the deploy repo.
+
+## Service naming (required)
+
+- **Backend:** `<project>-backend` (e.g. `newswebsite-backend`, `myapp-backend`). One per app.
+- **Frontend:** `<project>-frontend` (e.g. `newswebsite-frontend`, `myapp-frontend`). One per app.
+- **Extra backends** (workers, resolvers, etc.): `<project>-backend-<role>` (e.g. `tiktoksearch-backend-urlresolver`). Same project prefix, port 8080.
+- **Database** (if needed): `<project>-db` (e.g. `newswebsite-db`).
+- Use **lowercase** and **hyphens** only. Project name = directory name under `deploy/`.
+- Service names must be **unique** across all compose files.
+- Add `container_name: <service-name>` so `docker ps` shows clean names (e.g. `newswebsite-backend` not `newswebsite-newswebsite-backend-1`).
+
+## Port convention (required)
+
+- **All backends:** listen on **8080** inside the container.
+- **All frontends:** listen on **80** inside the container.
+- Do **not** publish these ports to the host; only Caddy publishes 80/443. Services are reached via `proxy-net` by service name.

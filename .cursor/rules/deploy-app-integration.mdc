@@ -1,0 +1,12 @@
+---
+description: Requirements for app projects that will be added to the deploy repo (ports, images)
+globs: **/Dockerfile*, **/README.md, **/package.json, **/vite.config.*
+alwaysApply: false
+---
+
+# Deploy: app projects joining deploy
+
+Use when designing or editing an app that will be added to the deploy repo.
+
+- Expose **backend on 8080** and **frontend on 80** in their Dockerfile/server config so they match the deploy port convention.
+- Use image names (or tags) that can be set via `PROJECT_BACKEND_IMAGE` / `PROJECT_FRONTEND_IMAGE` in `.env.prod`.
