@@ -41,3 +41,24 @@ model AppSettings {
   cronToken          String?   @unique
   updatedAt          DateTime  @updatedAt
 }
+
+/** Idempotency: one row per webhook delivery (X-Shopify-Webhook-Id or fallback key). */
+model WebhookDelivery {
+  id         String   @id @default(cuid())
+  deliveryId String   @unique
+  topic      String
+  shop       String?
+  receivedAt DateTime @default(now())
+}
+
+/** Deferred work for webhooks that perform DB deletes; processed by worker/cron. */
+model WebhookJob {
+  id          String    @id @default(cuid())
+  deliveryId  String    @unique
+  topic       String
+  shop        String?
+  payload     String?
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  processedAt DateTime?
+}

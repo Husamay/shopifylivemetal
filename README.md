@@ -106,6 +106,23 @@ Prices change **only** when you click that button (no built-in cron). To run dai
 
 ---
 
+## Webhooks (HTTPS)
+
+The app receives Shopify webhooks over HTTPS. Handlers validate origin via `authenticate.webhook(request)` (HMAC), record deliveries for idempotency, and return `200` quickly. Work that performs DB deletes (`app/uninstalled`, `shop/redact`) is enqueued and processed by a worker.
+
+- **Retry behavior**: Shopify retries failed deliveries (non-2xx or timeout). Handlers are idempotent: duplicate deliveries (same `X-Shopify-Webhook-Id` or fallback key) are acknowledged with `200` and no repeated side effects.
+- **Response time**: Handlers respond with `200` after validation and enqueue; heavy work runs in the worker.
+- **Worker**: In production, call the webhook processor periodically so enqueued jobs run:
+  - `GET /cron/process-webhooks?secret=YOUR_CRON_SECRET` or header `x-cron-secret: YOUR_CRON_SECRET`
+  - Use the same `CRON_SECRET` as `/cron/update-prices`. Recommended: every 1–5 minutes (e.g. cron-job.org or host cron).
+- **Logs**: Each webhook logs a structured line: `[webhook] { topic, shop, deliveryId, outcome }`. Search logs for `outcome: "enqueued"` or `outcome: "logged"` to confirm receipt; failed worker jobs are in `WebhookJob` with `status: "failed"`.
+- **Troubleshooting**:
+  - Ensure the app URL is HTTPS with a valid SSL certificate so Shopify can deliver webhooks.
+  - If deliveries fail, check Partners → your app → Webhooks (or API credentials) for delivery history and response codes.
+  - Query `WebhookJob` where `status = 'failed'` for worker errors; fix and re-run the worker or retry manually.
+
+---
+
 ## Tech
 
 - **Stack**: Node, Remix, Prisma (SQLite), Shopify App Bridge, Polaris.
