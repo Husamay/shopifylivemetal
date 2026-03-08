@@ -35,7 +35,11 @@ export default defineConfig({
   },
   plugins: [
     remix({
-      ignoredRouteFiles: ["**/.*"],
+      ignoredRouteFiles: [
+        "**/.*",
+        "**/*.test.{js,jsx,ts,tsx}",
+        "**/*.spec.{js,jsx,ts,tsx}",
+      ],
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,

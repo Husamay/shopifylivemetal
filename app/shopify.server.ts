@@ -21,7 +21,6 @@ const shopify = shopifyApp({
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
-  isTest: true,
   billing: {
     [PREMIUM_PLAN]: {
       lineItems: [
